@@ -1,13 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import Header from '../../components/Header';
+import { actions } from './store';
 
-const Home = () => {
+const Home = props => {
+  useEffect(() => {
+    props.getList();
+  }, []);
   return (
     <div>
       <Header />
-      home
+      <div>
+        {props.newsList.map(item => {
+          return <div key={item.id}>{item.title}</div>;
+        })}
+      </div>
     </div>
   );
 };
 
-export default Home;
+const mapStateToProps = state => ({
+  newsList: state.home.newsList
+});
+
+const mapDispatchToProps = dispatch => ({
+  getList() {
+    dispatch(actions.getList());
+  }
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);
