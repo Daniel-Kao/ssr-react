@@ -6,13 +6,16 @@ const app = express();
 
 const content = renderToString(<Home />);
 
+app.use(express.static('public'));
+
 app.get('/', (req, res) => {
   res.send(`
   <html>
     <head>
     </head>
     <body>
-    ${content}
+    <div id='root'>${content}</div>
+    <script src='/index.js'></script>
     </body>
   </html>
   `);
