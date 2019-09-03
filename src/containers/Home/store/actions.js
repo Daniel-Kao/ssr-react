@@ -7,8 +7,7 @@ const getListAction = list => ({
 });
 
 export const getList = () => (dispatch, getState) => {
-  axios.get('https://jsonplaceholder.typicode.com/todos').then(res => {
-    console.log(res.data);
+  return axios.get('https://jsonplaceholder.typicode.com/todos').then(res => {
     dispatch(getListAction(res.data));
   });
 };

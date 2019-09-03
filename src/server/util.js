@@ -1,26 +1,32 @@
 import React from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter, Route } from 'react-router-dom';
 import { renderToString } from 'react-dom/server';
 import { Provider } from 'react-redux';
-import Routes from '../Routes';
-import getStore from '../store';
 
-export const render = req => {
+export const render = (routes, req, store) => {
   const content = renderToString(
-    <Provider store={getStore()}>
+    <Provider store={store}>
       <StaticRouter location={req.path} context={{}}>
-        {Routes}
+        {routes.map(route => (
+          <Route {...route} />
+        ))}
       </StaticRouter>
     </Provider>
   );
   return `
-    <html>
-      <head>
-      </head>
-      <body>
-        <div id='root'>${content}</div>
-        <script src='/index.js'></script>
-      </body>
-    </html>
-  `;
+      <html>
+        <head>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+        </head>
+        <body>
+          <div id='root'>${content}</div>
+          <script src='/index.js'></script>
+          <script>
+          window.context = {
+            state: ${JSON.stringify(store.getState())}
+          }
+          </script>
+        </body>
+      </html>
+    `;
 };

@@ -19,6 +19,10 @@ const Home = props => {
   );
 };
 
+Home.loadData = store => {
+  return store.dispatch(actions.getList());
+};
+
 const mapStateToProps = state => ({
   newsList: state.home.newsList
 });
